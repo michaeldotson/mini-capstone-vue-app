@@ -1,47 +1,42 @@
 <template>
   <div class="home">
-    <h1>{{ message }}</h1>
-    
-    <h1>New Product</h1>
-      
-    <div>
-      Name: <input type="text" v-model="newProductName"><br>
-      Price: <input type="text" v-model="newProductPrice"><br>
-      Description: <input type="text" v-model="newProductDescription">
-      <br>
-      Supplier: <input type="text" v-model="newProductSupplier"><br>
-      Image Url: <input type="text" v-model="newProductImageUrl">
-      <br>
-      <div>{{ newProductName }}</div>
-      <button v-on:click="createProduct()">Create</button>
-    </div>
 
     <h2>All Products</h2>
 
-    <div> {{ currentProduct }} </div>
+    <!-- <div> {{ currentProduct }} </div> -->
+    
+    <!-- <div class="card-columns"> -->
+    <div class="card-deck">
+      <!-- <div class="card"> -->
+      <div v-for="product in products">
+        
+        <router-link v-bind:to="'/products/' + product.id">
+          <div class="card" style="width: 18rem;">
+            <div v-for="image in product.images">
+              <img :src="image.url" class="card-img-top" :alt="product.name">
+            </div>
 
-    <div v-for="product in products">
-      <h3>Name: {{product.name }}</h3>
-        <div v-for="image in product.images">
-          <img :src="image.url" :alt="product.name">
-        </div>
-        <div>
-          <button v-on:click="showProduct(product)">More Info</button>
-        </div>
-        <div v-if="currentProduct === product">
-          <p>Price: {{ product.formatted.price }}</p>
-          <p>Description: {{ product.description }}</p>
-          <h4> Edit Product</h4>
-          <div>
-            Name: <input type="text" v-model="product.name"><br>
-            Price: <input type="text" v-model="product.price"><br>
-            Description: <input type="text" v-model="product.description"><br>
-            Supplier: <input type="text" v-model="product.supplier_id"><br>
-            Image URL: <input type="text" v-model="product.images[0].url"><br>
-            <button v-on:click="updateProduct(product)">Update</button>
-            <button v-on:click="destroyProduct(product)">Destroy</button>
+            <div class="card-body">
+              <p class="card-text">{{ product.name }}</p>
+            </div>
           </div>
-        </div>
+        </router-link> 
+
+          <div v-if="currentProduct === product">
+            <p>Price: {{ product.formatted.price }}</p>
+            <p>Description: {{ product.description }}</p>
+            <h4> Edit Product</h4>
+            <div>
+              Name: <input type="text" v-model="product.name"><br>
+              Price: <input type="text" v-model="product.price"><br>
+              Description: <input type="text" v-model="product.description"><br>
+              Image URL: <input type="text" v-model="product.images[0].url"><br>
+              <button v-on:click="updateProduct(product)">Update</button>
+              <button v-on:click="destroyProduct(product)">Destroy</button>
+            </div>
+          </div>
+      </div>
+    </div> <!--remove this one if going back to card-columns above -->
     </div>
   </div>
 
@@ -60,14 +55,8 @@ var axios = require("axios");
 export default {
   data: function() {
     return {
-      message: "Marty Mar's Specialty Shop",
       products: [],
       currentProduct: {},
-      newProductName: "",
-      newProductPrice: "",
-      newProductDescription: "",
-      newProductSupplier: "",
-      newProductImageUrl: ""
     };
   },
   created: function() {
@@ -76,46 +65,7 @@ export default {
     });
   },
   methods: {
-    createProduct: function() {
-      var productParams = {
-        name: this.newProductName,
-        price: this.newProductPrice,
-        description: this.newProductDescription,
-        supplier_id: this.newProductSupplier,
-        image_url: this.newProductImageUrl
-
-      };
-      axios.post("/api/products", productParams).then(response => {
-        console.log("Success!", response.data);
-        this.products.push(response.data);
-      });
-    },
-    showProduct: function(product) {
-      if (this.currentProduct === product) {
-        this.currentProduct = {}; 
-      } else {
-        this.currentProduct = product;
-      }
-    },
-    updateProduct: function(product) {
-      var productParams = {
-        name: product.name,
-        price: product.price,
-        description: product.description,
-        supplier_id: product.supplier_id
-      };
-      axios.patch("/api/products/" + product.id, productParams).then(response => {
-        console.log("Success!", response.data);
-        product = response.data;
-      });
-    },
-    destroyProduct: function(product) {
-      axios.delete("/api/products/" + product.id).then(response => {
-        console.log("BOOM! It's gone.", response.data);
-        var index = this.products.indexOf(product);
-        this.products.splice(index, 1);
-      });
-    }
+    
   }
 };
 </script>
