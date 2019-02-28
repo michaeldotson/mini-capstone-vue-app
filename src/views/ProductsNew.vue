@@ -1,5 +1,5 @@
 <template>
-  <div class="product-new">
+  <div class="products-new">
     <h1>New Product</h1>
 
     <ul>
@@ -25,8 +25,8 @@
       <div>
         <input type="submit" value="Create">
       </div>
-      
     </form>
+    
   </div>
 </template>
 
