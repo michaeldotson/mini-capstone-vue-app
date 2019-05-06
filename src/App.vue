@@ -26,7 +26,6 @@
       
     </div>
     <div>
-
       <router-view/>
     </div>
     
@@ -38,8 +37,8 @@
   }
   li img {
     border-radius: 50%;
-    width: 75px;
-    height: 75px;
+    width: 50px;
+    height: 50px;
   }
 </style>
 

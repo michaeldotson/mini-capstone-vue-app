@@ -22,6 +22,7 @@
     <div class="card-columns">
       <div is="transition-group" name="fade">
       <div v-for="product in orderBy(filterBy(products, $parent.titleFilter, 'name', 'price'), sortAttribute, sortAscending)"  v-bind:key="product.id" class="col-md-4"> 
+
         <router-link v-bind:to="'/products/' + product.id">
           <div class="card" style="width: 18rem;">
             <div v-for="image in product.images">
@@ -42,6 +43,7 @@
               Price: <input type="text" v-model="product.price"><br>
               Description: <input type="text" v-model="product.description"><br>
               Image URL: <input type="text" v-model="product.images[0].url"><br>
+              
               <button v-on:click="updateProduct(product)">Update</button>
               <button v-on:click="destroyProduct(product)">Destroy</button>
             </div>
@@ -66,6 +68,9 @@
     width: inherit; 
     height: 400px; 
   }
+  .mapboxgl-popup {
+    max-width: 200px;
+  }
 </style>
 
 <script>
@@ -88,49 +93,49 @@ export default {
       this.products = response.data;
     });
   },
-  mounted: function() {
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZG90bWlrMSIsImEiOiJjanNvd3NybnkwcmhzNDltcGwzdG1kdDI0In0.Skix4a-Eja2GgStkjLzjlA';
+  // mounted: function() {
+  //   mapboxgl.accessToken = 'pk.eyJ1IjoiZG90bWlrMSIsImEiOiJjanNvd3NybnkwcmhzNDltcGwzdG1kdDI0In0.Skix4a-Eja2GgStkjLzjlA';
 
-    //Historical Landmarks
-    var losAngeles = [-118.2437, 34.0522];
-    var places = [
-      {
-        lat: 34.1341,
-        long: -118.3215,
-        description: "Hollywood Sign"
-      },
-      {
-        lat: 34.0913,
-        long: -118.3794,
-        description: "Sunset Strip"
-      }
-    ];
+  //   //Historical Landmarks
+  //   var losAngeles = [-118.2437, 34.0522];
+  //   var places = [
+  //     {
+  //       lat: 34.1341,
+  //       long: -118.3215,
+  //       description: "Hollywood Sign"
+  //     },
+  //     {
+  //       lat: 34.0913,
+  //       long: -118.3794,
+  //       description: "Sunset Strip"
+  //     }
+  //   ];
 
-    //create the map
-    var map = new mapboxgl.Map({
-      container: 'map', // container id
-      style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
-      center: [places[0].long, places[0].lat], // starting position [lng, lat]
-      zoom: 8 // starting zoom
-    });
+  //   //create the map
+  //   var map = new mapboxgl.Map({
+  //     container: 'map', // container id
+  //     style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+  //     center: [places[0].long, places[0].lat], // starting position [lng, lat]
+  //     zoom: 8 // starting zoom
+  //   });
 
-    places.forEach(function(place) {
-      // create the popup
-      var popup = new mapboxgl.Popup({ offset: 25 })
-        .setText(place.description);
-      var marker = new mapboxgl.Marker()
-        .setLngLat([place.long, place.lat])
-        .setPopup(popup) // sets a popup on this marker
-        .addTo(map);
-    });
+  //   places.forEach(function(place) {
+  //     // create the popup
+  //     var popup = new mapboxgl.Popup({ offset: 25 })
+  //       .setText(place.description);
+  //     var marker = new mapboxgl.Marker()
+  //       .setLngLat([place.long, place.lat])
+  //       .setPopup(popup) // sets a popup on this marker
+  //       .addTo(map);
+  //   });
 
-    // var directions = axios.get("'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + ${place.long} + ',' + ${place.lat} + ';-122.4194, 37.7749?access_token=pk.eyJ1IjoiZG90bWlrMSIsImEiOiJjanNvd3NybnkwcmhzNDltcGwzdG1kdDI0In0.Skix4a-Eja2GgStkjLzjlA'").then(response => {
-    //   var route = response.data;
-    // });
-    map.addControl(new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken
-    }));
-  },
+  //   // var directions = axios.get("'https://api.mapbox.com/directions/v5/mapbox/driving-traffic/' + ${place.long} + ',' + ${place.lat} + ';-122.4194, 37.7749?access_token=pk.eyJ1IjoiZG90bWlrMSIsImEiOiJjanNvd3NybnkwcmhzNDltcGwzdG1kdDI0In0.Skix4a-Eja2GgStkjLzjlA'").then(response => {
+  //   //   var route = response.data;
+  //   // });
+  //   map.addControl(new MapboxGeocoder({
+  //     accessToken: mapboxgl.accessToken
+  //   }));
+  // },
 
   methods: {
     setSortAttribute: function(attribute) {
